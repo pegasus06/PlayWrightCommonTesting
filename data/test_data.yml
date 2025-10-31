@@ -1,0 +1,71 @@
+# test_data.yml
+
+# 登录测试数据
+login_test_cases:
+  - case_id: "LOGIN_001"
+    description: "用户正常登录"
+    request:
+      username: "test_user@example.com"
+      password: "correct_password_123"
+    expected_response:
+      status_code: 200
+      message: "login success"
+      has_token: true
+
+  - case_id: "LOGIN_002"
+    description: "密码错误登录失败"
+    request:
+      username: "test_user@example.com"
+      password: "wrong_password"
+    expected_response:
+      status_code: 401
+      message: "invalid credentials"
+      has_token: false
+
+  - case_id: "LOGIN_003"
+    description: "用户名不存在"
+    request:
+      username: "non_existent_user@example.com"
+      password: "any_password"
+    expected_response:
+      status_code: 404
+      message: "user not found"
+      has_token: false
+
+# 创建订单测试数据
+create_order_test_cases:
+  - case_id: "ORDER_001"
+    description: "使用默认地址创建订单"
+    setup: # 前置条件，可能需要先执行的操作
+      login_data:
+        username: "test_user@example.com"
+        password: "correct_password_123"
+      items:
+        - product_id: 12345
+          quantity: 2
+        - product_id: 67890
+          quantity: 1
+    request:
+      shipping_address_id: "default" # 使用默认地址
+      coupon_code: "" # 不使用优惠券
+    expected_response:
+      status_code: 201
+      order_status: "pending_payment"
+      total_amount: 299.98
+
+  - case_id: "ORDER_002"
+    description: "使用优惠券创建订单"
+    setup:
+      login_data:
+        username: "vip_user@example.com"
+        password: "vip_password"
+      items:
+        - product_id: 12345
+          quantity: 1
+    request:
+      shipping_address_id: "addr_8899"
+      coupon_code: "DISCOUNT10"
+    expected_response:
+      status_code: 201
+      order_status: "pending_payment"
+      total_amount: 269.98 # 原价299.98，打折后
