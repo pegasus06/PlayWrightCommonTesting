@@ -1,5 +1,5 @@
 from .base_page import BasePage
-from utils.config import Config
+from config.config import Config
 
 
 class HomePage(BasePage):

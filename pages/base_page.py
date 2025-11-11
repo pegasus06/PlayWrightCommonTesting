@@ -2,7 +2,7 @@ import logging
 import os
 
 from playwright.sync_api import Page, expect
-from utils.config import Config
+from config.config import Config
 
 
 class BasePage:
